@@ -1,26 +1,17 @@
 package ru.netology.domain;
 
+import lombok.Data;
+
+@Data
 public class Book extends Product {
-    String author;
+    private String author;
+
+    public Book(String author) {
+        this.author = author;
+    }
 
     public Book(int id, String title, int price, String author) {
         super(id, title, price);
         this.author = author;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    @Override
-    public boolean matches(Product product, String search) {
-        if (super.matches(product, search)) {
-            return true;
-        }
-        if (product instanceof Book) {
-            Book book = (Book) product;
-            return book.getAuthor().equalsIgnoreCase(search);
-        }
-        return false;
     }
 }

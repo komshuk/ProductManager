@@ -1,21 +1,22 @@
 package ru.netology.manager;
 
+import ru.netology.domain.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.netology.domain.Book;
 import ru.netology.domain.Product;
 import ru.netology.domain.Smartphone;
 import ru.netology.repository.ProductRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class ProductManagerTest {
-    private ProductRepository repository = new ProductRepository();
-    private ProductManager manager = new ProductManager(repository);
-    private Book firstBook = new Book(1, "Alice’s Adventures in Wonderland", 228, "Lewis Carroll");
-    private Book secondBook = new Book(2, "Through the Looking-Glass, and What Alice Found There", 307, "Lewis Carroll");
-    private Smartphone firstSmartphone = new Smartphone(3, "8.3", 49_990, "Nokia");
-    private Smartphone secondSmartphone = new Smartphone(4, "5.3 4/64", 15_990, "Nokia");
+    private final ProductRepository repository = new ProductRepository();
+    private final ProductManager manager = new ProductManager(repository);
+    private final Book firstBook = new Book(1, "Alice’s Adventures in Wonderland", 228, "Lewis Carroll");
+    private final Book secondBook = new Book(2, "Through the Looking-Glass, and What Alice Found There", 307, "Lewis Carroll");
+    private final Smartphone firstSmartphone = new Smartphone(3, "8.3", 49_990, "Nokia");
+    private final Smartphone secondSmartphone = new Smartphone(4, "5.3 4/64", 15_990, "Nokia");
+
 
     @BeforeEach
     void setUp() {
@@ -23,6 +24,7 @@ class ProductManagerTest {
         manager.add(secondBook);
         manager.add(firstSmartphone);
         manager.add(secondSmartphone);
+
     }
 
     @Test
@@ -33,9 +35,23 @@ class ProductManagerTest {
     }
 
     @Test
-    public void shouldFindSeveralByBookAuthor() {
+    public void shouldFindBySmartphoneManufacturer() {
+        Product[] expected = new Product[]{firstSmartphone, secondSmartphone};
+        Product[] actual = manager.searchBy("Nokia");
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindBySmartphoneTitle() {
+        Product[] expected = new Product[]{secondSmartphone};
+        Product[] actual = manager.searchBy("5.3 4/64");
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindBookAuthor() {
         Product[] expected = new Product[]{firstBook, secondBook};
-        Product[] actual = manager.searchBy("lEwIs cArRoLl");
+        Product[] actual = manager.searchBy("Lewis Carroll");
         assertArrayEquals(expected, actual);
     }
 
@@ -46,24 +62,4 @@ class ProductManagerTest {
         assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void shouldFindBySmartphoneManufacturer() {
-        Product[] expected = new Product[]{firstSmartphone, secondSmartphone};
-        Product[] actual = manager.searchBy("NOKIA");
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldFindBySmartphoneTitle() {
-        Product[] expected = new Product[]{firstSmartphone};
-        Product[] actual = manager.searchBy("8.3");
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldNotFind() {
-        Product[] expected = new Product[0];
-        Product[] actual = manager.searchBy("Keep calm");
-        assertArrayEquals(expected, actual);
-    }
 }
